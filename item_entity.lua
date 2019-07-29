@@ -8,6 +8,42 @@ local gravity = tonumber(minetest.settings:get("movement_gravity")) or 9.81
 
 
 local item = {
+	set_item = function(self, itemstring)
+		builtin_item.set_item(self, itemstring)
+
+		local stack = ItemStack(itemstring)
+		local itemdef = minetest.registered_items[stack:get_name()]
+		if itemdef and itemdef.groups.flammable ~= 0 then
+			self.flammable = itemdef.groups.flammable
+		end
+	end,
+
+	burn_up = function(self)
+		-- disappear in a smoke puff
+		self.object:remove()
+		local p = self.object:get_pos()
+		minetest.sound_play("default_item_smoke", {
+			pos = p,
+			max_hear_distance = 8,
+		})
+		minetest.add_particlespawner({
+			amount = 3,
+			time = 0.1,
+			minpos = {x = p.x - 0.1, y = p.y + 0.1, z = p.z - 0.1 },
+			maxpos = {x = p.x + 0.1, y = p.y + 0.2, z = p.z + 0.1 },
+			minvel = {x = 0, y = 2.5, z = 0},
+			maxvel = {x = 0, y = 2.5, z = 0},
+			minacc = {x = -0.15, y = -0.02, z = -0.15},
+			maxacc = {x = 0.15, y = -0.01, z = 0.15},
+			minexptime = 4,
+			maxexptime = 6,
+			minsize = 5,
+			maxsize = 5,
+			collisiondetection = true,
+			texture = "default_item_smoke.png"
+		})
+	end,
+
 	on_step = function(self, dtime)
 		-- engine
 		self.age = self.age + dtime
