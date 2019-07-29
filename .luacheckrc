@@ -2,7 +2,8 @@ unused_args = false
 allow_defined_top = true
 
 globals = {
-	"gravity_manager"
+	"gravity_manager",
+	"registered_entities"
 }
 
 read_globals = {
