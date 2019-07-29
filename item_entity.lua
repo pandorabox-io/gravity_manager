@@ -4,7 +4,6 @@ local builtin_item = minetest.registered_entities["__builtin:item"]
 -- Setting it to -1 disables the feature
 
 local time_to_live = tonumber(minetest.settings:get("item_entity_ttl")) or 900
-local gravity = tonumber(minetest.settings:get("movement_gravity")) or 9.81
 
 
 local item = {
@@ -96,6 +95,8 @@ local item = {
 
 		self.moving_state = is_moving
 		self.slippery_state = is_slippery
+
+		local gravity = gravity_manager.get_gravity(pos)
 
 		if is_moving then
 			self.object:set_acceleration({x = 0, y = -gravity, z = 0})
