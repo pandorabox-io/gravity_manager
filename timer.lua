@@ -1,6 +1,6 @@
+local has_armor_mod = minetest.get_modpath("3d_armor")
 
 local timer = 0
-
 local cache = {}
 
 minetest.register_on_leaveplayer(function(player)
@@ -29,6 +29,16 @@ function update_gravity(player)
 
 end
 
+if has_armor_mod then
+	-- update physics if armor changed
+	armor:register_on_update(update_gravity)
+end
+
+minetest.register_on_joinplayer(function(player)
+	minetest.after(0, function()
+		update_gravity(player)
+	end)
+end)
 
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
