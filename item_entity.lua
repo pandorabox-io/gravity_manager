@@ -89,6 +89,7 @@ local item = {
 
 		if self.moving_state == is_moving and
 				self.slippery_state == is_slippery then
+			print("ret early")
 			-- Do not update anything until the moving state changes
 			return
 		end
@@ -96,9 +97,9 @@ local item = {
 		self.moving_state = is_moving
 		self.slippery_state = is_slippery
 
-		local gravity = gravity_manager.get_gravity(pos)
-
 		if is_moving then
+			local gravity = gravity_manager.get_gravity(pos)
+			print("grav: " .. gravity)
 			self.object:set_acceleration({x = 0, y = -gravity, z = 0})
 		else
 			self.object:set_acceleration({x = 0, y = 0, z = 0})
