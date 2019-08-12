@@ -1,13 +1,6 @@
 local has_armor_mod = minetest.get_modpath("3d_armor")
 
 local timer = 0
-local cache = {}
-
-minetest.register_on_leaveplayer(function(player)
-	-- clear cache
-	local name = player:get_player_name()
-	cache[name] = nil
-end)
 
 function update_gravity(player)
 	local pos = player:get_pos()
@@ -18,15 +11,15 @@ function update_gravity(player)
 		return
 	end
 
-	local current_gravity = cache[name] or 1
+	local phys_override = player:get_physics_override()
+	local current_gravity = phys_override.gravity
 	local new_gravity = gravity_manager.get_gravity(pos)
 
-	if (current_gravity - new_gravity) > 0.01 then
+	if math.abs(current_gravity - new_gravity) > 0.01 then
+		minetest.log("action", "[gravity_manager] setting new gravity " .. new_gravity ..
+			" for player: " .. name)
 		player:set_physics_override({gravity=new_gravity})
 	end
-
-	cache[name] = new_gravity
-
 end
 
 if has_armor_mod then
