@@ -7,6 +7,29 @@ local time_to_live = tonumber(minetest.settings:get("item_entity_ttl")) or 900
 
 
 local item = {
+
+        on_activate = function(self, staticdata, dtime_s)
+                if string.sub(staticdata, 1, string.len("return")) == "return" then
+                        local data = minetest.deserialize(staticdata)
+                        if data and type(data) == "table" then
+                                self.itemstring = data.itemstring
+                                self.age = (data.age or 0) + dtime_s
+                                self.dropped_by = data.dropped_by
+                        end
+                else
+                        self.itemstring = staticdata
+                end
+
+		local pos = self.object:get_pos()
+		local gravity = gravity_manager.get_gravity(pos)
+
+                self.object:set_armor_groups({immortal = 1})
+                self.object:set_velocity({x = 0, y = 2, z = 0})
+                self.object:set_acceleration({x = 0, y = -gravity, z = 0})
+                self:set_item()
+        end,
+
+
 	set_item = function(self, itemstring)
 		builtin_item.set_item(self, itemstring)
 
