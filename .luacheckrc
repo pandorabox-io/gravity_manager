@@ -17,5 +17,5 @@ read_globals = {
 	"dump",
 
 	-- mods
-	"armor"
+	"armor", "player_monoids"
 }
