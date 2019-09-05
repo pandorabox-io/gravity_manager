@@ -6,6 +6,7 @@ gravity_manager = {
 local MP = minetest.get_modpath("gravity_manager")
 
 dofile(MP.."/api.lua")
+dofile(MP.."/liquids.lua")
 dofile(MP.."/timer.lua")
 -- dofile(MP.."/item_entity.lua")
 
